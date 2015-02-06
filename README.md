@@ -13,7 +13,7 @@ Installation
 
 Using the Cordova Command line:
 ```
-cordova plugin add https://github.com/apache/cordova-plugin-console.git
+cordova plugin add https://github.com/Hless/cordova-plugin-location-updates.git
 ```
 
 Usage
