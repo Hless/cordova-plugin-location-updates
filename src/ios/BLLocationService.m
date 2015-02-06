@@ -92,15 +92,15 @@ static int kPOSTMaxRetries = 3;
     
     if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
         // Ask for background persmission
-        [self.locationManager requestAlwaysAuthorization];
+        [self.locationManager performSelector:@selector(requestAlwaysAuthorization)];
     }
-    
     
     if(![CLLocationManager locationServicesEnabled]) {
         *error = [NSError errorWithDomain:BLLocationServiceErrorDomain code:BLLocationServiceDisabledError userInfo:nil];
         NSLog(@"[BLLocationService] Location services are disabled");
         return;
     }
+    
     if(![CLLocationManager significantLocationChangeMonitoringAvailable]) {
         *error = [NSError errorWithDomain:BLLocationServiceErrorDomain code:BLLocationServiceDeviceNotCapableError userInfo:nil];
         NSLog(@"[BLLocationService] Significant location changes are not available on this device.");
