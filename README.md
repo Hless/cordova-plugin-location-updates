@@ -1,6 +1,6 @@
 Background location updates for Cordova
 =================================
-----------
+
 A cordova plugin to send periodical location updates to your backend server.  Just add your API endpoint and you're good to go!
 
 Currently only iOS is supported, but an Android version is on the roadmap.
@@ -10,7 +10,7 @@ Currently only iOS is supported, but an Android version is on the roadmap.
 
 Installation
 -------------
-----------
+
 Using the Cordova Command line:
 ```
 cordova plugin add https://github.com/apache/cordova-plugin-console.git
@@ -18,7 +18,7 @@ cordova plugin add https://github.com/apache/cordova-plugin-console.git
 
 Usage
 -------------
-----------
+
 There are three javascript functions available:
 
  - .configure(success, fail, options)
@@ -26,7 +26,7 @@ There are three javascript functions available:
  - .stop(success,fail)
 
 After the device ready event has been fired you should configure the plugin:
-```
+```javascript
 var options = {
     url:"http://www.example.com/your/endpoint", // Your API endpoint
     maximumAge: 0, // Time in seconds before location event is considered too old to be sent to server. 0  means no limit
@@ -41,7 +41,7 @@ cordova.plugins.BLLocationUpdates.configure(onSuccess,onFail,options );
 ```
 
 If configuring was a success you should start monitoring for Location Updates:
-```
+```javascript
 var onSuccess = function(){
     cordova.plugins.BLLocationUpdates.start();
 });
@@ -49,15 +49,15 @@ cordova.plugins.BLLocationUpdates.configure(onSuccess,onFail,options );
 ```
 
 To stop monitoring :
-```
+```javascript
 cordova.plugins.BLLocationUpdates.stop();
 ```
 
 Receiving location updates
 ======================
--------
+
 Locations will be send to your backend in JSON format. The structure looks as follows:
-```
+```json
 {  
   "location":{  
     "altitude":0,
