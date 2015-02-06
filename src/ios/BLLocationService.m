@@ -58,7 +58,7 @@ static int kPOSTMaxRetries = 3;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.activityType = CLActivityTypeOther;
         _locationManager.delegate = self;
-
+        
         
         [self _recover];
         
@@ -69,20 +69,20 @@ static int kPOSTMaxRetries = 3;
 
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-
+    
     self.lastLocation = [locations lastObject];
     self.currentRetries = 0;
     self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:
-     ^{
-         [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTask];
-    }];
+                           ^{
+                               [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTask];
+                           }];
     
     [self _save];
-
+    
 }
 
 - (void) startWithError:(NSError **)error {
- 
+    
     if(!self.url) {
         // No URL, we can't start monitoring
         NSLog(@"[BLLocationService] No URL supplied for posting user location.");
@@ -124,7 +124,7 @@ static int kPOSTMaxRetries = 3;
     
     [[NSUserDefaults standardUserDefaults] setObject:values forKey:@"BLLocationService.persistedObject"];
     //...
-   
+    
 }
 
 - (void) _recover {
@@ -154,7 +154,7 @@ static int kPOSTMaxRetries = 3;
         NSLog(@"[BLLocationService] Location is too old" );
         return;
     }
-
+    
     
     self.currentRetries++;
     
@@ -173,13 +173,18 @@ static int kPOSTMaxRetries = 3;
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:postData];
     [request setTimeoutInterval:5];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    //[request setValue:[postData length] forKey:@"Content-Length"];
+    if(self.headers)
+        [self.headers enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [request setValue:obj forHTTPHeaderField:key];
+        }];
     
     self.activeConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     
     [self.activeConnection start];
- 
+    
 }
 
 
@@ -208,7 +213,7 @@ static int kPOSTMaxRetries = 3;
     }
     if(self.backgroundTask && self.backgroundTask != UIBackgroundTaskInvalid) {
         [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTask];
-    	self.backgroundTask = UIBackgroundTaskInvalid;
+        self.backgroundTask = UIBackgroundTaskInvalid;
     }
 }
 
@@ -219,7 +224,7 @@ static int kPOSTMaxRetries = 3;
     [locationDict setObject:[NSNumber numberWithDouble:location.coordinate.longitude] forKey:@"longitude"];
     
     [locationDict setObject:[NSNumber numberWithDouble:location.altitude] forKey:@"altitude"];
-
+    
     [locationDict setObject:[NSNumber numberWithDouble:location.horizontalAccuracy] forKey:@"horizontalAccuracy"];
     [locationDict setObject:[NSNumber numberWithDouble:location.verticalAccuracy] forKey:@"verticalAccuracy"];
     
